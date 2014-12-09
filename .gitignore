@@ -9,3 +9,6 @@ sites/site*/public/theme/
 textpattern/
 HISTORY.txt
 README.txt
+
+demos/grunt-tutorial/node_modules/
+demos/grunt-tutorial/build/
