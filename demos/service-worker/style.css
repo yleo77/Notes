@@ -1,0 +1,24 @@
+html {
+  font-family: sans-serif;
+}
+
+.image-wrapper {
+
+}
+
+.clearfix:before,
+.clearfix:after {
+  content: " ";
+  display: table;
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+
+.left {
+  float: left;
+  margin-right: 20px;
+}
+

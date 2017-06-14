@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ServiceWorker Demo</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <span>ServiceWorker Demo</span>
+
+    <div class="image-wrapper clearfix">
+      <div class="left">
+        <p>image from public network</p>
+        <img width="50" height="50" src="https://mdn.mozillademos.org/files/12636/sw-lifecycle.png" alt="这是个来自非当前域名的图片" />
+      </div>
+      <div class="left">
+        <p>image from current domain</p>
+        <img width="50" height="50" src="image.jpg"/>
+      </div>
+    </div>
+    <div id="text"></div>
+    <script src="script.js"></script>
+    <script>
+
+      navigator.serviceWorker.register('sw.js', {
+        scope: './'
+      }).then(reg => {
+        console.log(`service worker scope : ${reg.scope}`);
+
+        if(reg.installing) {
+          console.log('Service worker installing');
+        } else if(reg.waiting) {
+          console.log('Service worker installed, But not active. Why?');
+          // from https://github.com/jakearchibald/simple-serviceworker-tutorial
+          console.log("It can't become active now because pages are still open that are controlled by the older version. Either close those tabs, or shift+reload them (which loads them without the ServiceWorker). That will allow the new version to become active, so it'll be used for the next page load.");
+        } else if(reg.active) {
+          console.log('Service worker active');
+        }
+
+        reg.addEventListener('updatefound', function() {
+          console.log("A new service worker is come!");
+          var installing = reg.installing;
+          reg.installing.addEventListener('statechange', function() {
+            console.log(`reg.installing.state: ${installing.state}`);
+            if (installing.state == 'installed') {
+              console.log("New Service worker installed.");
+              console.log('You need refresh the page');
+              setTimeout(function() {
+                if (installing.state == 'activated') {
+                  console.log("New Service worker activated.");
+                }
+              }, 1000);
+            } else if (installing.state == 'redundant') {
+              console.log('Registration failed');
+            }
+          });
+        });
+
+      }).catch(function(error) {
+        console.log('Registration failed with ' + error);
+      });
+    </script>
+  </body>
+</html>
